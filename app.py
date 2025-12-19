@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 st.set_page_config(
@@ -19,7 +20,10 @@ df = pd.read_csv("data/exchange_rate.csv", index_col=0, parse_dates=True)
 import numpy as np
 
 # Hitung log return harian
-return_df = np.log(df / df.shift(1)).dropna()
+
+df_numeric = df.apply(pd.to_numeric, errors="coerce")
+return_df = np.log(df_numeric / df_numeric.shift(1)).dropna()
+
 
 st.sidebar.header("⚙️ Pengaturan")
 
