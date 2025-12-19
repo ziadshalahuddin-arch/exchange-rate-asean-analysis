@@ -58,6 +58,7 @@ for country in selected_countries:
 ax.set_xlabel("Waktu")
 ax.set_ylabel("Nilai Tukar")
 ax.legend()
+df = df.loc['2001':'2024']
 
 st.pyplot(fig)
 
@@ -70,9 +71,7 @@ if analysis_type == "Return Harian":
 
     ax.legend()
     ax.set_ylabel("Log Return")
-    ax.xaxis.set_major_locator(mdates.YearLocator(5))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-    fig.autofmt_xdate()
+    df = df.loc['2001':'2024']
     st.pyplot(fig)
 
 if analysis_type == "Volatilitas":
@@ -86,9 +85,7 @@ if analysis_type == "Volatilitas":
     fig, ax = plt.subplots()
     volatility.plot(kind="bar", ax=ax)
     ax.set_ylabel("Volatilitas")
-    ax.xaxis.set_major_locator(mdates.YearLocator(5))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-    fig.autofmt_xdate()
+    df = df.loc['2001':'2024']
     st.pyplot(fig)
 
 if analysis_type == "Korelasi":
@@ -105,9 +102,7 @@ if analysis_type == "Korelasi":
     ax.set_yticks(range(len(corr_matrix.columns)))
     ax.set_xticklabels(corr_matrix.columns)
     ax.set_yticklabels(corr_matrix.columns)
-    ax.xaxis.set_major_locator(mdates.YearLocator(5))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-    fig.autofmt_xdate()
+    adf = df.loc['2001':'2024']
 
     st.pyplot(fig)
 
