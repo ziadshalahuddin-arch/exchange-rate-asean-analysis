@@ -24,6 +24,7 @@ import numpy as np
 df_numeric = df.apply(pd.to_numeric, errors="coerce")
 return_df = np.log(df_numeric / df_numeric.shift(1)).dropna()
 
+corr_matrix = return_df.corr()
 
 st.sidebar.header("⚙️ Pengaturan")
 
@@ -37,7 +38,12 @@ selected_countries = st.sidebar.multiselect(
 
 analysis_type = st.sidebar.radio(
     "Pilih Analisis",
-    ["Level Nilai Tukar", "Return Harian", "Volatilitas"]
+    [
+        "Level Nilai Tukar",
+        "Return Harian",
+        "Volatilitas",
+        "Korelasi"
+    ]
 )
 
 st.subheader("Pergerakan Nilai Tukar")
@@ -77,6 +83,29 @@ if analysis_type == "Volatilitas":
     volatility.plot(kind="bar", ax=ax)
     ax.set_ylabel("Volatilitas")
     st.pyplot(fig)
+
+if analysis_type == "Korelasi":
+    st.subheader("🔗 Korelasi Return Antar Mata Uang")
+
+    st.write("Matriks korelasi return harian:")
+    st.dataframe(corr_matrix)
+
+    fig, ax = plt.subplots()
+    cax = ax.matshow(corr_matrix, cmap="coolwarm")
+    fig.colorbar(cax)
+
+    ax.set_xticks(range(len(corr_matrix.columns)))
+    ax.set_yticks(range(len(corr_matrix.columns)))
+    ax.set_xticklabels(corr_matrix.columns)
+    ax.set_yticklabels(corr_matrix.columns)
+
+    st.pyplot(fig)
+
+import matplotlib.dates as mdates
+
+ax.xaxis.set_major_locator(mdates.YearLocator(5))
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+fig.autofmt_xdate()
 
 st.markdown("---")
 st.caption("""
