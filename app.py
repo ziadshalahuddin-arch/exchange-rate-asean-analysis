@@ -17,8 +17,11 @@ sebagai dasar analisis ekonomi makro.
 """)
 
 df = pd.read_csv("data/exchange_rate.csv", index_col=0, parse_dates=True)
-df_numeric['Date'] = pd.to_datetime(df_numeric['Date'])
-df_numeric.set_index('Date', inplace=True)
+
+df['Date'] = pd.to_datetime(df['Date'])
+df.set_index('Date', inplace=True)
+df_numeric = df[selected_countries]
+
 return_df.index = pd.to_datetime(return_df.index)
 # Hitung log return harian
 
