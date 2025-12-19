@@ -17,7 +17,9 @@ sebagai dasar analisis ekonomi makro.
 """)
 
 df = pd.read_csv("data/exchange_rate.csv", index_col=0, parse_dates=True)
-
+df_numeric['Date'] = pd.to_datetime(df_numeric['Date'])
+df_numeric.set_index('Date', inplace=True)
+return_df.index = pd.to_datetime(return_df.index)
 # Hitung log return harian
 
 df_numeric = df.apply(pd.to_numeric, errors="coerce")
@@ -44,9 +46,6 @@ analysis_type = st.sidebar.radio(
         "Korelasi"
     ]
 )
-
-df_numeric.index = pd.to_datetime(df_numeric.index)
-return_df.index = pd.to_datetime(return_df.index)
 
 st.subheader("Pergerakan Nilai Tukar")
 
