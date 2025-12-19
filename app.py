@@ -23,15 +23,16 @@ Fokus analisis meliputi **level nilai tukar, return harian, volatilitas, dan kor
 # =====================
 df = pd.read_csv("data/exchange_rate.csv")
 
-# Pastikan ada kolom Date
-if "Date" not in df.columns:
-    st.error("Kolom 'Date' tidak ditemukan di dataset.")
-    st.stop()
+# Jika kolom Date tidak ada, pakai kolom pertama sebagai tanggal
+if "Date" in df.columns:
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+    df.set_index("Date", inplace=True)
+else:
+    # anggap kolom pertama adalah tanggal
+    df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0], errors="coerce")
+    df.set_index(df.columns[0], inplace=True)
 
-# Konversi Date → datetime (SATU KALI)
-df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
-df = df.dropna(subset=["Date"])
-df.set_index("Date", inplace=True)
+df = df.dropna()
 
 # Pastikan data numerik
 df_numeric = df.apply(pd.to_numeric, errors="coerce")
