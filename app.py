@@ -45,7 +45,8 @@ st.subheader("Pergerakan Nilai Tukar")
 fig, ax = plt.subplots()
 
 for country in selected_countries:
-    ax.plot(df.index, df[country], label=country)
+    ax.plot(df_numeric.index, df_numeric[country], label=country)
+
 
 ax.set_xlabel("Waktu")
 ax.set_ylabel("Nilai Tukar")
