@@ -78,5 +78,13 @@ if analysis_type == "Volatilitas":
     ax.set_ylabel("Volatilitas")
     st.pyplot(fig)
 
+st.markdown("---")
+st.caption("""
+📌 **Sumber Data**  
+Data nilai tukar diperoleh dari **Yahoo Finance**  
+(Ticker: IDRUSD=X, MYRUSD=X, THBUSD=X, PHPUSD=X)  
+Frekuensi: Harian  
+Periode: 2000–2024 (sesuai ketersediaan data)
+""")
 
 
