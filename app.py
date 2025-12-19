@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 st.set_page_config(
     page_title="ASEAN Exchange Rate Analysis",
@@ -69,6 +70,9 @@ if analysis_type == "Return Harian":
 
     ax.legend()
     ax.set_ylabel("Log Return")
+    ax.xaxis.set_major_locator(mdates.YearLocator(5))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    fig.autofmt_xdate()
     st.pyplot(fig)
 
 if analysis_type == "Volatilitas":
@@ -82,6 +86,9 @@ if analysis_type == "Volatilitas":
     fig, ax = plt.subplots()
     volatility.plot(kind="bar", ax=ax)
     ax.set_ylabel("Volatilitas")
+    ax.xaxis.set_major_locator(mdates.YearLocator(5))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    fig.autofmt_xdate()
     st.pyplot(fig)
 
 if analysis_type == "Korelasi":
@@ -98,14 +105,11 @@ if analysis_type == "Korelasi":
     ax.set_yticks(range(len(corr_matrix.columns)))
     ax.set_xticklabels(corr_matrix.columns)
     ax.set_yticklabels(corr_matrix.columns)
+    ax.xaxis.set_major_locator(mdates.YearLocator(5))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    fig.autofmt_xdate()
 
     st.pyplot(fig)
-
-import matplotlib.dates as mdates
-
-ax.xaxis.set_major_locator(mdates.YearLocator(5))
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-fig.autofmt_xdate()
 
 st.markdown("---")
 st.caption("""
