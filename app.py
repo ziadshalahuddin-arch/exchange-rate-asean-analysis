@@ -237,8 +237,15 @@ if analysis_type == "Korelasi":
 # =====================
 st.markdown("---")
 st.caption("""
+st.download_button(
+    "⬇️ Download CSV",
+    table_df.to_csv(index=False),
+    file_name=f"{selected_country}_{table_type}.csv",
+    mime="text/csv"
+)
+
 📌 **Sumber Data**  
-Yahoo Finance  
+Yahoo Finance (https://finance.yahoo.com/quote/)
 Ticker: IDRUSD=X, MYRUSD=X, THBUSD=X, PHPUSD=X  
 Frekuensi: Harian  
 Periode: 2005–2025
