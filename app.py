@@ -220,5 +220,5 @@ st.caption("""
 Yahoo Finance  
 Ticker: IDRUSD=X, MYRUSD=X, THBUSD=X, PHPUSD=X  
 Frekuensi: Harian  
-Periode: 2000–2024
+Periode: 2005–2025
 """)
