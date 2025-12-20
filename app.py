@@ -105,14 +105,12 @@ st.set_page_config(
 st.sidebar.title("📌 Daftar Isi")
 
 st.sidebar.markdown("""
-1. [Pendahuluan](#pendahuluan)  
-2. [Data & Metodologi](#data--metodologi)  
-3. [Level Nilai Tukar](#level-nilai-tukar)  
-4. [Return Harian](#return-harian)  
-5. [Volatilitas Nilai Tukar](#volatilitas-nilai-tukar)  
-6. [Korelasi Antar Negara](#korelasi-antar-negara)  
-7. [Interpretasi Ekonomi](#interpretasi-ekonomi)  
-8. [Kesimpulan](#kesimpulan)  
+1. [Pendahuluan] 
+2. [Data] 
+3. [Level Nilai Tukar]  
+4. [Return Harian]
+5. [Volatilitas Nilai Tukar] 
+6. [Korelasi Antar Negara]
 """)
 
 st.sidebar.header("⚙️ Pengaturan")
