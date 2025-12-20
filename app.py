@@ -92,6 +92,29 @@ return_df = np.log(df_numeric / df_numeric.shift(1)).dropna()
 # =====================
 # SIDEBAR
 # =====================
+import streamlit as st
+
+st.set_page_config(
+    page_title="Analisis Nilai Tukar ASEAN",
+    layout="wide"
+)
+
+# =========================
+# SIDEBAR - DAFTAR ISI
+# =========================
+st.sidebar.title("📌 Daftar Isi")
+
+st.sidebar.markdown("""
+1. [Pendahuluan](#pendahuluan)  
+2. [Data & Metodologi](#data--metodologi)  
+3. [Level Nilai Tukar](#level-nilai-tukar)  
+4. [Return Harian](#return-harian)  
+5. [Volatilitas Nilai Tukar](#volatilitas-nilai-tukar)  
+6. [Korelasi Antar Negara](#korelasi-antar-negara)  
+7. [Interpretasi Ekonomi](#interpretasi-ekonomi)  
+8. [Kesimpulan](#kesimpulan)  
+""")
+
 st.sidebar.header("⚙️ Pengaturan")
 
 countries = df_numeric.columns.tolist()
