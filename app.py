@@ -45,19 +45,22 @@ Hasil analisis divisualisasikan dalam bentuk aplikasi interaktif berbasis **Stre
 sebagai penerapan analisis data dan ekonomi makro.
 """)
 
+import os
 
-st.subheader("🌏 Peta Kawasan Asia Tenggara")
+st.subheader("🗺️ Peta Asia Tenggara")
 
-st.image(
-    "images/asean_map.png",
-    caption="Peta Negara-Negara ASEAN",
-    use_container_width=True
-)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+image_path = os.path.join(BASE_DIR, "images", "asean_map.png")
 
-st.markdown("""
-Peta ini menunjukkan cakupan wilayah negara ASEAN yang dianalisis.
-Pengguna dapat memilih negara di sidebar untuk melihat pergerakan nilai tukarnya.
-""")
+if os.path.exists(image_path):
+    st.image(
+        image_path,
+        caption="Peta Negara-Negara ASEAN",
+        use_container_width=True
+    )
+else:
+    st.error(f"Gambar tidak ditemukan: {image_path}")
+
 
 st.info("""
 📌 Interaksi dilakukan melalui sidebar.  
