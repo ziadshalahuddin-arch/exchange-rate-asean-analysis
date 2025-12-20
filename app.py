@@ -14,12 +14,12 @@ st.set_page_config(
 
 st.title("📈 ASEAN Exchange Rate Analysis")
 st.markdown("""
-Analisis nilai tukar mata uang negara ASEAN terhadap USD.  
+Analisis nilai tukar mata uang negara ASEAN terhadap USD (Berdasarkan Yahoo Finance).
 Fokus analisis meliputi **level nilai tukar, return harian, volatilitas, dan korelasi**.
 """)
 
 st.markdown("""
-## 📌 Pendahuluan Proyek
+## 📌 Pendahuluan
 
 Nilai tukar (*exchange rate*) merupakan salah satu indikator makroekonomi yang penting
 dalam perekonomian terbuka. Pergerakan nilai tukar memengaruhi stabilitas ekonomi,
