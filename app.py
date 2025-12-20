@@ -18,6 +18,52 @@ Analisis nilai tukar mata uang negara ASEAN terhadap USD.
 Fokus analisis meliputi **level nilai tukar, return harian, volatilitas, dan korelasi**.
 """)
 
+st.markdown("""
+## 📌 Pendahuluan Proyek
+
+Nilai tukar (*exchange rate*) merupakan salah satu indikator makroekonomi yang penting
+dalam perekonomian terbuka. Pergerakan nilai tukar memengaruhi stabilitas ekonomi,
+perdagangan internasional, arus modal, serta daya saing suatu negara.
+
+Negara-negara ASEAN memiliki keterkaitan ekonomi dan keuangan yang kuat,
+sehingga fluktuasi nilai tukar di satu negara dapat berdampak pada negara lainnya.
+Dalam dua dekade terakhir, nilai tukar mata uang ASEAN terhadap dolar Amerika Serikat (USD)
+mengalami dinamika yang dipengaruhi oleh kebijakan moneter global, krisis keuangan,
+serta kondisi ekonomi domestik masing-masing negara.
+
+Proyek ini bertujuan untuk menganalisis pergerakan nilai tukar mata uang
+Indonesia (IDR), Malaysia (MYR), Thailand (THB), dan Filipina (PHP)
+terhadap USD menggunakan data harian periode jangka panjang.
+Analisis dilakukan melalui pendekatan **time series**, yang mencakup:
+
+- Level nilai tukar
+- Return harian
+- Volatilitas
+- Korelasi antar mata uang
+
+Hasil analisis divisualisasikan dalam bentuk aplikasi interaktif berbasis **Streamlit**
+sebagai penerapan analisis data dan ekonomi makro.
+""")
+
+
+st.subheader("🌏 Peta Kawasan Asia Tenggara")
+
+st.image(
+    "images/asean_map.png",
+    caption="Peta Negara-Negara ASEAN",
+    use_container_width=True
+)
+
+st.markdown("""
+Peta ini menunjukkan cakupan wilayah negara ASEAN yang dianalisis.
+Pengguna dapat memilih negara di sidebar untuk melihat pergerakan nilai tukarnya.
+""")
+
+st.info("""
+📌 Interaksi dilakukan melalui sidebar.  
+Peta digunakan sebagai konteks geografis untuk memahami keterkaitan regional ASEAN.
+""")
+
 # =====================
 # LOAD DATA (AMAN)
 # =====================
