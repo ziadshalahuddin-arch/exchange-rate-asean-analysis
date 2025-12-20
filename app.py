@@ -105,12 +105,12 @@ st.set_page_config(
 st.sidebar.title("📌 Daftar Isi")
 
 st.sidebar.markdown("""
-1. [Pendahuluan] 
-2. [Data] 
-3. [Level Nilai Tukar]  
-4. [Return Harian]
-5. [Volatilitas Nilai Tukar] 
-6. [Korelasi Antar Negara]
+1. Pendahuluan
+2. Data 
+3. Level Nilai Tukar
+4. Return Harian
+5. Volatilitas Nilai Tukar 
+6. Korelasi Antar Negara
 """)
 
 st.sidebar.header("⚙️ Pengaturan")
