@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import yfinance as yf
+import plotly.express as px
 
-# =====================
+# ======================
 # CONFIG
-# =====================
+# ======================
 st.set_page_config(
     page_title="ASEAN Exchange Rate Analysis",
     layout="wide"
@@ -14,233 +14,205 @@ st.set_page_config(
 
 st.title("📈 ASEAN Exchange Rate Analysis")
 st.markdown("""
-Analisis nilai tukar mata uang negara ASEAN terhadap USD (Berdasarkan Yahoo Finance).
-Fokus analisis meliputi **level nilai tukar, return harian, volatilitas, dan korelasi**.
+Aplikasi ini menampilkan **analisis nilai tukar negara ASEAN terhadap USD**  
+menggunakan data **real-time dari Yahoo Finance**.
+
+Fitur:
+- Data otomatis update sampai hari ini  
+- Pilih negara  
+- Pilih periode waktu  
+- Pilih frekuensi (harian / bulanan / tahunan)  
+- Grafik interaktif  
+- Return, volatilitas, dan korelasi  
 """)
 
-st.markdown("""
-## 📌 Pendahuluan
+# ======================
+# TICKER LIST
+# ======================
+tickers = {
+    "Indonesia (IDR)": "IDRUSD=X",
+    "Malaysia (MYR)": "MYRUSD=X",
+    "Thailand (THB)": "THBUSD=X",
+    "Philippines (PHP)": "PHPUSD=X"
+}
 
-Nilai tukar (*exchange rate*) merupakan salah satu indikator makroekonomi yang penting
-dalam perekonomian terbuka. Pergerakan nilai tukar memengaruhi stabilitas ekonomi,
-perdagangan internasional, arus modal, serta daya saing suatu negara.
-
-Negara-negara ASEAN memiliki keterkaitan ekonomi dan keuangan yang kuat,
-sehingga fluktuasi nilai tukar di satu negara dapat berdampak pada negara lainnya.
-Dalam dua dekade terakhir, nilai tukar mata uang ASEAN terhadap dolar Amerika Serikat (USD)
-mengalami dinamika yang dipengaruhi oleh kebijakan moneter global, krisis keuangan,
-serta kondisi ekonomi domestik masing-masing negara.
-
-Proyek ini bertujuan untuk menganalisis pergerakan nilai tukar mata uang
-Indonesia (IDR), Malaysia (MYR), Thailand (THB), dan Filipina (PHP)
-terhadap USD menggunakan data harian periode jangka panjang.
-Analisis dilakukan melalui pendekatan **time series**, yang mencakup:
-
-- Level nilai tukar
-- Return harian
-- Volatilitas
-- Korelasi antar mata uang
-
-Hasil analisis divisualisasikan dalam bentuk aplikasi interaktif berbasis **Streamlit**
-sebagai penerapan analisis data dan ekonomi makro.
-""")
-
-import os
-
-st.subheader("🗺️ Peta Asia Tenggara")
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-image_path = os.path.join(BASE_DIR, "images", "asean_map.png")
-
-if os.path.exists(image_path):
-    st.image(
-        image_path,
-        caption="Peta Negara-Negara ASEAN",
-        use_container_width=True
-    )
-else:
-    st.error(f"Gambar tidak ditemukan: {image_path}")
-
-
-st.info("""
-📌 Interaksi dilakukan melalui sidebar.  
-Peta digunakan sebagai konteks geografis untuk memahami keterkaitan regional ASEAN.
-""")
-
-# =====================
-# LOAD DATA (AMAN)
-# =====================
-df = pd.read_csv("data/exchange_rate.csv")
-
-# Jika kolom Date tidak ada, pakai kolom pertama sebagai tanggal
-if "Date" in df.columns:
-    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
-    df.set_index("Date", inplace=True)
-else:
-    # anggap kolom pertama adalah tanggal
-    df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0], errors="coerce")
-    df.set_index(df.columns[0], inplace=True)
-
-df = df.dropna()
-
-# Pastikan data numerik
-df_numeric = df.apply(pd.to_numeric, errors="coerce")
-
-# Hitung log return
-return_df = np.log(df_numeric / df_numeric.shift(1)).dropna()
-
-# =====================
+# ======================
 # SIDEBAR
-# =====================
-import streamlit as st
-
-st.set_page_config(
-    page_title="Analisis Nilai Tukar ASEAN",
-    layout="wide"
-)
-
-# =========================
-# SIDEBAR - DAFTAR ISI
-# =========================
-st.sidebar.title("📌 Daftar Isi")
-
-st.sidebar.markdown("""
-1. Pendahuluan
-2. Data 
-3. Level Nilai Tukar
-4. Return Harian
-5. Volatilitas Nilai Tukar 
-6. Korelasi Antar Negara
-""")
-
+# ======================
 st.sidebar.header("⚙️ Pengaturan")
 
-countries = df_numeric.columns.tolist()
-
 selected_countries = st.sidebar.multiselect(
-    "Pilih negara",
-    countries,
-    default=countries[:3]
+    "Pilih negara:",
+    list(tickers.keys()),
+    default=list(tickers.keys())[:3]
+)
+
+period = st.sidebar.selectbox(
+    "Pilih rentang waktu:",
+    ["1y", "3y", "5y", "10y", "max"],
+    index=2
+)
+
+frequency = st.sidebar.radio(
+    "Frekuensi data:",
+    ["Harian", "Bulanan", "Tahunan"]
 )
 
 analysis_type = st.sidebar.radio(
-    "Pilih Analisis",
+    "Jenis Analisis:",
     [
         "Level Nilai Tukar",
-        "Return Harian",
+        "Return",
         "Volatilitas",
-        "Korelasi"
+        "Korelasi",
+        "Tabel Data"
     ]
 )
 
-# =====================
-# LEVEL NILAI TUKAR
-# =====================
-st.subheader("📈 Pergerakan Nilai Tukar")
+# ======================
+# DOWNLOAD DATA
+# ======================
+@st.cache_data
+def load_data(tickers, period):
+    data = yf.download(
+        list(tickers.values()),
+        period=period,
+        auto_adjust=True
+    )["Close"]
+    return data
 
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.xaxis.set_major_locator(mdates.YearLocator(5))
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+raw_df = load_data(tickers, period)
 
-for country in selected_countries:
-    ax.plot(df_numeric.index, df_numeric[country], label=country)
+# Rename kolom ke nama negara
+raw_df.columns = list(tickers.keys())
 
-ax.set_xlabel("Tahun")
-ax.set_ylabel("Nilai Tukar")
-ax.legend()
-plt.xticks(rotation=45)
-plt.tight_layout()
-st.pyplot(fig)
+# ======================
+# RESAMPLING
+# ======================
+if frequency == "Bulanan":
+    df = raw_df.resample("M").last()
+elif frequency == "Tahunan":
+    df = raw_df.resample("Y").last()
+else:
+    df = raw_df.copy()
 
-# =====================
-# RETURN HARIAN
-# =====================
-if analysis_type == "Return Harian":
-    st.subheader("📉 Return Harian Nilai Tukar")
+# ======================
+# HITUNG RETURN
+# ======================
+return_df = np.log(df / df.shift(1))
 
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.xaxis.set_major_locator(mdates.YearLocator(5))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+# ======================
+# ======================
+# OUTPUT VISUAL
+# ======================
+# ======================
 
-    for country in selected_countries:
-        ax.plot(return_df.index, return_df[country], label=country)
+# ===== LEVEL NILAI TUKAR =====
+if analysis_type == "Level Nilai Tukar":
+    st.subheader("📊 Level Nilai Tukar terhadap USD")
 
-    ax.axhline(0, linestyle="--", linewidth=1)
-    ax.set_xlabel("Tahun")
-    ax.set_ylabel("Log Return")
-    ax.legend()
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    st.pyplot(fig)
+    fig = px.line(
+        df[selected_countries],
+        title="Pergerakan Nilai Tukar",
+        labels={
+            "value": "Nilai Tukar",
+            "index": "Waktu",
+            "variable": "Negara"
+        }
+    )
 
-    st.markdown("""
-    **Interpretasi:**
-    - Return positif → mata uang **apresiasi**
-    - Return negatif → mata uang **depresiasi**
-    - Fluktuasi ekstrem → indikasi ketidakstabilan ekonomi
-    """)
+    fig.update_layout(hovermode="x unified")
+    st.plotly_chart(fig, use_container_width=True)
 
-# =====================
-# VOLATILITAS
-# =====================
-if analysis_type == "Volatilitas":
+    st.info("""
+📘 **Cara membaca grafik:**
+- Garis naik → depresiasi terhadap USD  
+- Garis turun → apresiasi  
+- Perbedaan level menunjukkan kekuatan relatif mata uang  
+""")
+
+# ===== RETURN =====
+elif analysis_type == "Return":
+    st.subheader("📉 Return Nilai Tukar")
+
+    fig = px.line(
+        return_df[selected_countries],
+        title="Return Nilai Tukar",
+        labels={
+            "value": "Log Return",
+            "index": "Waktu",
+            "variable": "Negara"
+        }
+    )
+
+    fig.add_hline(y=0, line_dash="dash")
+    fig.update_layout(hovermode="x unified")
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.info("""
+📘 **Interpretasi Return:**
+- Return > 0 → mata uang melemah (depresiasi)
+- Return < 0 → mata uang menguat (apresiasi)
+- Fluktuasi tajam → ketidakstabilan ekonomi / shock eksternal
+""")
+
+# ===== VOLATILITAS =====
+elif analysis_type == "Volatilitas":
     st.subheader("📊 Volatilitas Nilai Tukar")
 
     volatility = return_df[selected_countries].std()
 
-    st.write("Standar deviasi return harian:")
-    st.dataframe(volatility)
+    vol_df = pd.DataFrame({
+        "Negara": volatility.index,
+        "Volatilitas": volatility.values
+    })
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    volatility.plot(kind="bar", ax=ax)
-    ax.set_ylabel("Volatilitas")
-    ax.set_xlabel("Negara")
-    ax.set_title("Perbandingan Volatilitas")
-    plt.tight_layout()
-    st.pyplot(fig)
+    fig = px.bar(
+        vol_df,
+        x="Negara",
+        y="Volatilitas",
+        title="Perbandingan Volatilitas Nilai Tukar"
+    )
 
-    st.markdown("""
-    **Interpretasi:**
-    - Volatilitas tinggi → risiko nilai tukar lebih besar
-    - Volatilitas rendah → stabilitas relatif lebih baik
-    """)
+    st.plotly_chart(fig, use_container_width=True)
 
-# =====================
-# KORELASI
-# =====================
-if analysis_type == "Korelasi":
-    st.subheader("🔗 Korelasi Return Antar Mata Uang")
+    st.dataframe(vol_df)
 
-    corr_matrix = return_df[selected_countries].corr()
-    st.dataframe(corr_matrix)
-
-    fig, ax = plt.subplots(figsize=(7, 6))
-    cax = ax.matshow(corr_matrix, cmap="coolwarm")
-    fig.colorbar(cax)
-
-    ax.set_xticks(range(len(corr_matrix.columns)))
-    ax.set_yticks(range(len(corr_matrix.columns)))
-    ax.set_xticklabels(corr_matrix.columns, rotation=45)
-    ax.set_yticklabels(corr_matrix.columns)
-
-    plt.tight_layout()
-    st.pyplot(fig)
-
-    st.markdown("""
-    **Interpretasi:**
-    - Korelasi positif tinggi → pergerakan searah
-    - Korelasi rendah/negatif → respon ekonomi berbeda
-    """)
-
-# =====================
-# SUMBER DATA
-# =====================
-st.markdown("---")
-st.caption("""
-
-📌 **Sumber Data**  
-Yahoo Finance (https://finance.yahoo.com/quote/)
-Ticker: IDRUSD=X, MYRUSD=X, THBUSD=X, PHPUSD=X  
-Frekuensi: Harian  
-Periode: 2005–2025
+    st.info("""
+📘 **Makna volatilitas:**
+- Semakin besar → nilai tukar makin tidak stabil  
+- Risiko ekonomi & investasi lebih tinggi  
 """)
+
+# ===== KORELASI =====
+elif analysis_type == "Korelasi":
+    st.subheader("🔗 Korelasi Return Antar Negara")
+
+    corr = return_df[selected_countries].corr()
+
+    fig = px.imshow(
+        corr,
+        text_auto=True,
+        color_continuous_scale="RdBu",
+        title="Matriks Korelasi Return"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.dataframe(corr)
+
+    st.info("""
+📘 **Makna korelasi:**
+- Mendekati +1 → pergerakan searah  
+- Mendekati -1 → berlawanan arah  
+- Mendekati 0 → tidak berkaitan  
+""")
+
+# ===== TABEL DATA =====
+elif analysis_type == "Tabel Data":
+    st.subheader("📋 Data Nilai Tukar")
+
+    st.dataframe(df[selected_countries])
+
+    st.caption("Data bersumber dari Yahoo Finance dan diperbarui otomatis.")
