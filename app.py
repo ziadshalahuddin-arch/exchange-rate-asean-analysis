@@ -14,10 +14,24 @@ st.set_page_config(
 
 st.title("📈 ASEAN Exchange Rate Analysis")
 st.markdown("""
+## 📌 Pendahuluan
 Aplikasi ini menampilkan **analisis nilai tukar negara ASEAN terhadap USD**  
 menggunakan data **real-time dari Yahoo Finance**.
 
-Fitur:
+Nilai tukar (*exchange rate*) merupakan salah satu indikator makroekonomi yang penting
+dalam perekonomian terbuka. Pergerakan nilai tukar memengaruhi stabilitas ekonomi,
+perdagangan internasional, arus modal, serta daya saing suatu negara.
+
+Negara-negara ASEAN memiliki keterkaitan ekonomi dan keuangan yang kuat,
+sehingga fluktuasi nilai tukar di satu negara dapat berdampak pada negara lainnya.
+Dalam dua dekade terakhir, nilai tukar mata uang ASEAN terhadap dolar Amerika Serikat (USD)
+mengalami dinamika yang dipengaruhi oleh kebijakan moneter global, krisis keuangan,
+serta kondisi ekonomi domestik masing-masing negara.
+
+Proyek ini bertujuan untuk menganalisis pergerakan nilai tukar mata uang
+Indonesia (IDR), Malaysia (MYR), Thailand (THB), dan Filipina (PHP)
+terhadap USD menggunakan data harian periode jangka panjang.
+Analisis dilakukan melalui pendekatan **time series**, yang mencakup:
 - Data otomatis update sampai hari ini  
 - Pilih negara  
 - Pilih periode waktu  
@@ -26,11 +40,81 @@ Fitur:
 - Return, volatilitas, dan korelasi  
 """)
 
+import plotly.express as px
+
+st.subheader("🗺️ Peta Interaktif Negara ASEAN")
+
+# Data koordinat + nama negara ASEAN
+asean_map_data = {
+    "country": [
+        "Indonesia", "Malaysia", "Thailand", "Philippines",
+        "Vietnam", "Singapore", "Cambodia",
+        "Laos", "Myanmar", "Brunei"
+    ],
+    "lat": [ -2.5, 4.2, 15.8, 12.8, 14.1, 1.35, 12.6, 19.8, 21.9, 4.5 ],
+    "lon": [118.0, 102.0, 100.9, 121.8, 108.3, 103.8, 104.9, 102.6, 95.9, 114.7]
+}
+
+map_df = pd.DataFrame(asean_map_data)
+
+fig_map = px.scatter_geo(
+    map_df,
+    lat="lat",
+    lon="lon",
+    text="country",
+    hover_name="country",
+    scope="asia",
+    projection="natural earth",
+)
+
+fig_map.update_traces(marker=dict(size=12, color="red"))
+fig_map.update_layout(
+    height=500,
+    margin=dict(l=0, r=0, t=0, b=0),
+)
+
+st.plotly_chart(fig_map, use_container_width=True)
+
 # ======================
 # TICKER LIST
 # ======================
 tickers = {
-    "Indonesia (IDR)": "IDRUSD=X",
+    "Indonesia 
+    import plotly.express as px
+
+st.subheader("🗺️ Peta Interaktif Negara ASEAN")
+
+# Data koordinat + nama negara ASEAN
+asean_map_data = {
+    "country": [
+        "Indonesia", "Malaysia", "Thailand", "Philippines",
+        "Vietnam", "Singapore", "Cambodia",
+        "Laos", "Myanmar", "Brunei"
+    ],
+    "lat": [ -2.5, 4.2, 15.8, 12.8, 14.1, 1.35, 12.6, 19.8, 21.9, 4.5 ],
+    "lon": [118.0, 102.0, 100.9, 121.8, 108.3, 103.8, 104.9, 102.6, 95.9, 114.7]
+}
+
+map_df = pd.DataFrame(asean_map_data)
+
+fig_map = px.scatter_geo(
+    map_df,
+    lat="lat",
+    lon="lon",
+    text="country",
+    hover_name="country",
+    scope="asia",
+    projection="natural earth",
+)
+
+fig_map.update_traces(marker=dict(size=12, color="red"))
+fig_map.update_layout(
+    height=500,
+    margin=dict(l=0, r=0, t=0, b=0),
+)
+
+st.plotly_chart(fig_map, use_container_width=True)
+(IDR)": "IDRUSD=X",
     "Malaysia (MYR)": "MYRUSD=X",
     "Thailand (THB)": "THBUSD=X",
     "Philippines (PHP)": "PHPUSD=X"
@@ -39,6 +123,37 @@ tickers = {
 # ======================
 # SIDEBAR
 # ======================
+if section == "Pendahuluan":
+    st.header("📌 Pendahuluan")
+    st.write("""
+    Aplikasi ini menyajikan analisis nilai tukar negara-negara ASEAN
+    terhadap USD menggunakan data harian dari Yahoo Finance.
+    """)
+
+elif section == "Peta ASEAN":
+    st.header("🗺️ Peta Negara ASEAN")
+    # ⬅ tempel kode MAP INTERAKTIF DI SINI
+
+elif section == "Level Nilai Tukar":
+    st.header("📈 Level Nilai Tukar")
+    # grafik level
+
+elif section == "Return Harian":
+    st.header("📉 Return Harian")
+    # grafik return
+
+elif section == "Volatilitas":
+    st.header("📊 Volatilitas")
+    # grafik volatilitas
+
+elif section == "Korelasi":
+    st.header("🔗 Korelasi")
+    # heatmap korelasi
+
+elif section == "Tabel Data":
+    st.header("📋 Data Nilai Tukar")
+    st.dataframe(df)
+
 st.sidebar.header("⚙️ Pengaturan")
 
 selected_countries = st.sidebar.multiselect(
