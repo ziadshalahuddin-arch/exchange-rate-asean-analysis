@@ -40,6 +40,9 @@ Analisis dilakukan melalui pendekatan **time series**, yang mencakup:
 - Return, volatilitas, dan korelasi  
 """)
 
+# ======================
+# TICKER LIST
+# ======================
 import plotly.express as px
 
 st.subheader("🗺️ Peta Interaktif Negara ASEAN")
@@ -75,46 +78,8 @@ fig_map.update_layout(
 
 st.plotly_chart(fig_map, use_container_width=True)
 
-# ======================
-# TICKER LIST
-# ======================
 tickers = {
-    "Indonesia 
-    import plotly.express as px
-
-st.subheader("🗺️ Peta Interaktif Negara ASEAN")
-
-# Data koordinat + nama negara ASEAN
-asean_map_data = {
-    "country": [
-        "Indonesia", "Malaysia", "Thailand", "Philippines",
-        "Vietnam", "Singapore", "Cambodia",
-        "Laos", "Myanmar", "Brunei"
-    ],
-    "lat": [ -2.5, 4.2, 15.8, 12.8, 14.1, 1.35, 12.6, 19.8, 21.9, 4.5 ],
-    "lon": [118.0, 102.0, 100.9, 121.8, 108.3, 103.8, 104.9, 102.6, 95.9, 114.7]
-}
-
-map_df = pd.DataFrame(asean_map_data)
-
-fig_map = px.scatter_geo(
-    map_df,
-    lat="lat",
-    lon="lon",
-    text="country",
-    hover_name="country",
-    scope="asia",
-    projection="natural earth",
-)
-
-fig_map.update_traces(marker=dict(size=12, color="red"))
-fig_map.update_layout(
-    height=500,
-    margin=dict(l=0, r=0, t=0, b=0),
-)
-
-st.plotly_chart(fig_map, use_container_width=True)
-(IDR)": "IDRUSD=X",
+    "Indonesia (IDR)": "IDRUSD=X",
     "Malaysia (MYR)": "MYRUSD=X",
     "Thailand (THB)": "THBUSD=X",
     "Philippines (PHP)": "PHPUSD=X"
@@ -123,36 +88,20 @@ st.plotly_chart(fig_map, use_container_width=True)
 # ======================
 # SIDEBAR
 # ======================
-if section == "Pendahuluan":
-    st.header("📌 Pendahuluan")
-    st.write("""
-    Aplikasi ini menyajikan analisis nilai tukar negara-negara ASEAN
-    terhadap USD menggunakan data harian dari Yahoo Finance.
-    """)
+st.sidebar.title("📘 Daftar Isi")
 
-elif section == "Peta ASEAN":
-    st.header("🗺️ Peta Negara ASEAN")
-    # ⬅ tempel kode MAP INTERAKTIF DI SINI
-
-elif section == "Level Nilai Tukar":
-    st.header("📈 Level Nilai Tukar")
-    # grafik level
-
-elif section == "Return Harian":
-    st.header("📉 Return Harian")
-    # grafik return
-
-elif section == "Volatilitas":
-    st.header("📊 Volatilitas")
-    # grafik volatilitas
-
-elif section == "Korelasi":
-    st.header("🔗 Korelasi")
-    # heatmap korelasi
-
-elif section == "Tabel Data":
-    st.header("📋 Data Nilai Tukar")
-    st.dataframe(df)
+section = st.sidebar.radio(
+    "Navigasi",
+    [
+        "Pendahuluan",
+        "Peta ASEAN",
+        "Level Nilai Tukar",
+        "Return Harian",
+        "Volatilitas",
+        "Korelasi",
+        "Tabel Data"
+    ]
+)
 
 st.sidebar.header("⚙️ Pengaturan")
 
