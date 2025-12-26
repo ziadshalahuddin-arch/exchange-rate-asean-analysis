@@ -280,3 +280,9 @@ elif analysis_type == "Tabel Data":
     st.dataframe(df[selected_countries])
 
     st.caption("Data bersumber dari Yahoo Finance dan diperbarui otomatis.")
+
+st.markdown("---")
+st.caption("""
+
+📌 **Sumber Data**  
+Yahoo Finance (https://finance.yahoo.com/quote/)
