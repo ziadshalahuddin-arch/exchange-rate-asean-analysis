@@ -45,7 +45,7 @@ Analisis dilakukan melalui pendekatan **time series**, yang mencakup:
 # ======================
 import plotly.express as px
 
-st.subheader("🗺️ Peta Interaktif Negara ASEAN")
+st.subheader("🗺️ Peta Negara ASEAN")
 
 # Data koordinat + nama negara ASEAN
 asean_map_data = {
