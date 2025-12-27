@@ -273,6 +273,29 @@ elif analysis_type == "Korelasi":
 - Mendekati 0 → tidak berkaitan  
 """)
 
+st.subheader("📊 Ringkasan Data")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("Jumlah Observasi", df.shape[0])
+
+with col2:
+    st.metric("Jumlah Negara", df.shape[1])
+
+with col3:
+    st.metric("Periode Data", f"{df.index.min().year} – {df.index.max().year}")
+
+st.markdown("### 🧠 Catatan Analisis")
+
+st.markdown("""
+- Nilai tukar mencerminkan kekuatan mata uang terhadap USD  
+- Perubahan harian mencerminkan respon pasar terhadap kondisi ekonomi global  
+- Volatilitas tinggi → risiko nilai tukar lebih besar  
+- Korelasi tinggi → pergerakan mata uang cenderung searah  
+- Analisis ini berguna untuk memahami stabilitas ekonomi kawasan ASEAN  
+""")
+
 # ===== TABEL DATA =====
 elif analysis_type == "Tabel Data":
     st.subheader("📋 Data Nilai Tukar")
@@ -282,7 +305,21 @@ elif analysis_type == "Tabel Data":
     st.caption("Data bersumber dari Yahoo Finance dan diperbarui otomatis.")
 
 st.markdown("---")
-st.caption("""
 
-📌 **Sumber Data**  
-Yahoo Finance (https://finance.yahoo.com/quote/)
+st.markdown("### 📚 Sumber Data")
+
+st.markdown("""
+Data nilai tukar diperoleh dari:
+
+- **Yahoo Finance**  
+  Ticker:  
+  - IDR → `IDRUSD=X`  
+  - MYR → `MYRUSD=X`  
+  - THB → `THBUSD=X`  
+  - PHP → `PHPUSD=X`  
+
+📅 Frekuensi data: Harian  
+📆 Periode: sesuai ketersediaan data (hingga hari ini)
+
+Data diambil secara **real-time** menggunakan library `yfinance`.
+""")
