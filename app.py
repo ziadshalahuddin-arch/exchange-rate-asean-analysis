@@ -296,13 +296,22 @@ st.markdown("""
 - Analisis ini berguna untuk memahami stabilitas ekonomi kawasan ASEAN  
 """)
 
-# ===== TABEL DATA =====
-elif analysis_type == "Tabel Data":
-    st.subheader("📋 Data Nilai Tukar")
+st.write("Pilih rentang tanggal:")
 
-    st.dataframe(df[selected_countries])
+start_date = st.date_input(
+    "Mulai",
+    df.index.min().date()
+)
 
-    st.caption("Data bersumber dari Yahoo Finance dan diperbarui otomatis.")
+end_date = st.date_input(
+    "Sampai",
+    df.index.max().date()
+)
+
+filtered_df = df.loc[str(start_date):str(end_date), selected_countries]
+
+st.dataframe(filtered_df, use_container_width=True)
+
 
 st.markdown("---")
 
