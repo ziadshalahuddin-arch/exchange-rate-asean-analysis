@@ -303,6 +303,7 @@ elif analysis_type == "Tabel Data":
     st.dataframe(df[selected_countries])
 
     st.caption("Data bersumber dari Yahoo Finance dan diperbarui otomatis.")
+<<<<<<< HEAD
 
 st.markdown("---")
 
@@ -323,3 +324,5 @@ Data nilai tukar diperoleh dari:
 
 Data diambil secara **real-time** menggunakan library `yfinance`.
 """)
+=======
+>>>>>>> b15935eb14c530d48d71e9e426fe5bf199aa95ef
